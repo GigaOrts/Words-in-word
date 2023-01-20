@@ -10,7 +10,7 @@ namespace TaskTest
     {
         static void Main(string[] args)
         {
-            string word = "откорок";
+            string word = "арбуз";
             List<string> correctWordsList = new List<string>();
             List<string> wordsList = new List<string>
             {
