@@ -10,7 +10,7 @@ namespace TaskTest
     {
         static void Main(string[] args)
         {
-            string word = "арбуз";
+            string word = "откорок";
             List<string> correctWordsList = new List<string>();
             List<string> wordsList = new List<string>
             {
@@ -18,11 +18,11 @@ namespace TaskTest
                 "рог", "морг", "огр", "мор", "порог", "бра", "раб", "зубр"
             };
 
-            do
-            {
-                Console.Write("Enter a string (2 < Length < 15): ");
-                word = Console.ReadLine();
-            } while (2 < word.Length && 15 < word.Length);
+            //do
+            //{
+            //    Console.Write("Enter a string (2 < Length < 15): ");
+            //    word = Console.ReadLine();
+            //} while (2 < word.Length && 15 < word.Length);
 
             foreach (string verifiableWord in wordsList)
             {
@@ -50,101 +50,74 @@ namespace TaskTest
 
         public string CorrectWord { get; private set; }
 
-        private Dictionary<Letter, int> wordLetters;
-        private Dictionary<Letter, int> verifiableWordLetters;
-        
-        private List<Letter> _letters = new List<Letter>()
+        private Dictionary<char, int> wordLetters;
+        private Dictionary<char, int> verifiableWordLetters;
+
+        private List<char> _letters = new List<char>()
         {
-            new Letter('а'),
-            new Letter('б'),
-            new Letter('в'),
-            new Letter('г'),
-            new Letter('д'),
-            new Letter('е'),
-            new Letter('ё'),
-            new Letter('ж'),
-            new Letter('з'),
-            new Letter('и'),
-            new Letter('й'),
-            new Letter('к'),
-            new Letter('л'),
-            new Letter('м'),
-            new Letter('н'),
-            new Letter('о'),
-            new Letter('п'),
-            new Letter('р'),
-            new Letter('с'),
-            new Letter('т'),
-            new Letter('у'),
-            new Letter('ф'),
-            new Letter('х'),
-            new Letter('ц'),
-            new Letter('ч'),
-            new Letter('ш'),
-            new Letter('щ'),
-            new Letter('ъ'),
-            new Letter('ы'),
-            new Letter('ь'),
-            new Letter('э'),
-            new Letter('ю'),
-            new Letter('я')
+            'а','б','в','г','д',
+            'е','ё','ж','з','и',
+            'й','к','л','м','н',
+            'о','п','р','с','т',
+            'у','ф','х','ц','ч',
+            'ш','щ','ъ','ы','ь',
+            'э','ю','я'
         };
 
         public bool TryCheckWord(string verifiableWord)
         {
-            wordLetters = new Dictionary<Letter, int>();
-            verifiableWordLetters = new Dictionary<Letter, int>();
+            wordLetters = new Dictionary<char, int>();
+            verifiableWordLetters = new Dictionary<char, int>();
 
             foreach (char letter in CorrectWord)
             {
-                UpdateLetterCounter(letter, wordLetters);
+                SearchInAlphabet(letter, wordLetters);
             }
 
             foreach (char letter in verifiableWord)
             {
-                UpdateLetterCounter(letter, verifiableWordLetters);
+                SearchInAlphabet(letter, verifiableWordLetters);
             }
 
             return CheckIsWordsMatching(wordLetters, verifiableWordLetters);
         }
 
-        private bool CheckIsWordsMatching(Dictionary<Letter, int> wordLetters, Dictionary<Letter, int> verifiableWordLetters)
+        private void SearchInAlphabet(char letter, Dictionary<char, int> letterCollection)
         {
+            foreach (char alphabetLetter in _letters)
+            {
+                CountLetters(letter, letterCollection, alphabetLetter);
+            }
+        }
+
+        private void CountLetters(char letter, Dictionary<char, int> letterCollection, char alphabetLetter)
+        {
+            int counter = 1;
+
+            if (letter == alphabetLetter)
+            {
+                if (letterCollection.ContainsKey(alphabetLetter) == false)
+                    letterCollection.Add(alphabetLetter, counter);
+                else
+                    letterCollection[alphabetLetter] += counter;
+            }
+        }
+
+        private bool CheckIsWordsMatching(Dictionary<char, int> wordLetters, Dictionary<char, int> verifiableWordLetters)
+        {
+            if (wordLetters.Count < verifiableWordLetters.Count)
+                return false;
+
             foreach (var letter in wordLetters)
             {
-                if (verifiableWordLetters.TryGetValue(letter.Key, out int verifiableLetterValue) == false)
+                if (verifiableWordLetters.TryGetValue(letter.Key, out int verifiableLetterCount) == false)
                     return false;
 
-                if (verifiableLetterValue != letter.Value)
+                if (verifiableLetterCount > letter.Value)
                     return false;
             }
 
             return true;
-        }
-
-        private void UpdateLetterCounter(char letter, Dictionary<Letter, int> letterCollection)
-        {
-            foreach (Letter AlphabetLetter in _letters)
-            {
-                if (letter == AlphabetLetter.Value)
-                {
-                    if (letterCollection.ContainsKey(AlphabetLetter) == false)
-                        letterCollection.Add(AlphabetLetter, ++AlphabetLetter.Count);
-                    else
-                        letterCollection[AlphabetLetter] = ++AlphabetLetter.Count;
-                }
-            }
-        }
-    }
-
-    class Letter
-    {
-        public char Value { get; private set; }
-        public int Count { get; set; }
-
-        public Letter(char value)
-        {
-            Value = value;
         }
     }
 }
