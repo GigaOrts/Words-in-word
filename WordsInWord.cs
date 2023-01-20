@@ -1,117 +1,49 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System;
 
-namespace TaskTest
+namespace Test
 {
-    internal class Program
+    class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             string word = "арбуз";
-            List<string> correctWordsList = new List<string>();
-            List<string> wordsList = new List<string>
-            {
-                "кот", "ток", "око", "мимо", "гром", "ром", "мама",
-                "рог", "морг", "огр", "мор", "порог", "бра", "раб", "зубр"
+
+            List<string> dictionary = new List<string>() {
+                "бра",
+                "раб",
+                "зубр",
+                "кот",
+                "ток",
             };
-            
-            foreach (string verifiableWord in wordsList)
-            {
-                Console.WriteLine(verifiableWord);
 
-                WordsInWordSearcher searcher = new WordsInWordSearcher(word);
-                if (searcher.TryCheckWord(verifiableWord))
-                    correctWordsList.Add(verifiableWord);
-            }
-
-            Console.WriteLine("Полученный массив слов");
-            foreach (string correctWord in correctWordsList)
-            {
-                Console.WriteLine(correctWord);
-            }
-        }
-    }
-
-    class WordsInWordSearcher
-    {
-        private readonly int MaxLettersInWord = 15;
-
-        public WordsInWordSearcher(string word)
-        {
-            CorrectWord = word;
-        }
-        
-        public string CorrectWord { get; private set; }
-
-        private Dictionary<char, int> _wordLetters;
-        private Dictionary<char, int> _verifiableWordLetters;
-
-        private List<char> _alphabet = new List<char>()
-        {
-            'а','б','в','г','д',
-            'е','ё','ж','з','и',
-            'й','к','л','м','н',
-            'о','п','р','с','т',
-            'у','ф','х','ц','ч',
-            'ш','щ','ъ','ы','ь',
-            'э','ю','я'
-        };
-
-        public bool TryCheckWord(string verifiableWord)
-        {
-            _wordLetters = new Dictionary<char, int>();
-            _verifiableWordLetters = new Dictionary<char, int>();
-
-            foreach (char letter in CorrectWord)
-            {
-                SearchInAlphabet(letter, _wordLetters);
-            }
-
-            foreach (char letter in verifiableWord)
-            {
-                SearchInAlphabet(letter, _verifiableWordLetters);
-            }
-
-            return CheckIsWordsMatching(_wordLetters, _verifiableWordLetters);
+            Console.WriteLine(String.Join(", ", GenerateWordsFromWord(word, dictionary)));
         }
 
-        private void SearchInAlphabet(char letter, Dictionary<char, int> letterCollection)
+        public static List<string> GenerateWordsFromWord(string text, List<string> dictionary)
         {
-            foreach (char alphabetLetter in _alphabet)
-            {
-                CountLetters(letter, letterCollection, alphabetLetter);
-            }
+            List<string> words = new List<string>();
+
+            foreach (string record in dictionary)
+                if (ContainWordInText(text, record))
+                    words.Add(record);
+
+            words.Sort();
+
+            return words;
         }
 
-        private void CountLetters(char letter, Dictionary<char, int> letterCollection, char alphabetLetter)
+        public static bool ContainWordInText(string text, string word)
         {
-            int counter = 1;
+            List<char> textSymbols = text.ToCharArray().ToList();
+            List<char> wordSymbols = word.ToCharArray().ToList();
 
-            if (letter == alphabetLetter)
-            {
-                if (letterCollection.ContainsKey(alphabetLetter) == false)
-                    letterCollection.Add(alphabetLetter, counter);
+            foreach (char symbol in wordSymbols)
+                if (textSymbols.Contains(symbol))
+                    textSymbols.Remove(symbol);
                 else
-                    letterCollection[alphabetLetter] += counter;
-            }
-        }
-
-        private bool CheckIsWordsMatching(Dictionary<char, int> wordLetters, Dictionary<char, int> verifiableWordLetters)
-        {
-            if (wordLetters.Count < verifiableWordLetters.Count)
-                return false;
-
-            for (int i = 0; i < MaxLettersInWord; i++)
-            {
-                if (verifiableWordLetters.TryGetValue(letter.Key, out int verifiableLetterCount) == false)
                     return false;
-
-                if (verifiableLetterCount > letter.Value)
-                    return false;
-            }
 
             return true;
         }
