@@ -37,11 +37,13 @@ namespace TaskTest
 
     class WordsInWordSearcher
     {
+        private readonly int MaxLettersInWord = 15;
+
         public WordsInWordSearcher(string word)
         {
             CorrectWord = word;
         }
-
+        
         public string CorrectWord { get; private set; }
 
         private Dictionary<char, int> _wordLetters;
@@ -102,7 +104,7 @@ namespace TaskTest
             if (wordLetters.Count < verifiableWordLetters.Count)
                 return false;
 
-            foreach (var letter in wordLetters)
+            for (int i = 0; i < MaxLettersInWord; i++)
             {
                 if (verifiableWordLetters.TryGetValue(letter.Key, out int verifiableLetterCount) == false)
                     return false;
