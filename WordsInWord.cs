@@ -50,10 +50,10 @@ namespace TaskTest
 
         public string CorrectWord { get; private set; }
 
-        private Dictionary<char, int> wordLetters;
-        private Dictionary<char, int> verifiableWordLetters;
+        private Dictionary<char, int> _wordLetters;
+        private Dictionary<char, int> _verifiableWordLetters;
 
-        private List<char> _letters = new List<char>()
+        private List<char> _alphabet = new List<char>()
         {
             'а','б','в','г','д',
             'е','ё','ж','з','и',
@@ -66,25 +66,25 @@ namespace TaskTest
 
         public bool TryCheckWord(string verifiableWord)
         {
-            wordLetters = new Dictionary<char, int>();
-            verifiableWordLetters = new Dictionary<char, int>();
+            _wordLetters = new Dictionary<char, int>();
+            _verifiableWordLetters = new Dictionary<char, int>();
 
             foreach (char letter in CorrectWord)
             {
-                SearchInAlphabet(letter, wordLetters);
+                SearchInAlphabet(letter, _wordLetters);
             }
 
             foreach (char letter in verifiableWord)
             {
-                SearchInAlphabet(letter, verifiableWordLetters);
+                SearchInAlphabet(letter, _verifiableWordLetters);
             }
 
-            return CheckIsWordsMatching(wordLetters, verifiableWordLetters);
+            return CheckIsWordsMatching(_wordLetters, _verifiableWordLetters);
         }
 
         private void SearchInAlphabet(char letter, Dictionary<char, int> letterCollection)
         {
-            foreach (char alphabetLetter in _letters)
+            foreach (char alphabetLetter in _alphabet)
             {
                 CountLetters(letter, letterCollection, alphabetLetter);
             }
