@@ -17,13 +17,7 @@ namespace TaskTest
                 "кот", "ток", "око", "мимо", "гром", "ром", "мама",
                 "рог", "морг", "огр", "мор", "порог", "бра", "раб", "зубр"
             };
-
-            //do
-            //{
-            //    Console.Write("Enter a string (2 < Length < 15): ");
-            //    word = Console.ReadLine();
-            //} while (2 < word.Length && 15 < word.Length);
-
+            
             foreach (string verifiableWord in wordsList)
             {
                 Console.WriteLine(verifiableWord);
