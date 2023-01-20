@@ -10,12 +10,10 @@ namespace Test
         {
             string word = "арбуз";
 
-            List<string> dictionary = new List<string>() {
-                "бра",
-                "раб",
-                "зубр",
-                "кот",
-                "ток",
+            List<string> dictionary = new List<string>()
+            {
+                "кот", "ток", "око", "мимо", "гром", "ром", "мама",
+                "рог", "морг", "огр", "мор", "порог", "бра", "раб", "зубр"
             };
 
             Console.WriteLine(String.Join(", ", GenerateWordsFromWord(word, dictionary)));
